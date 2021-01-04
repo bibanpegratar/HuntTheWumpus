@@ -12,6 +12,6 @@ Enemy::Enemy(Map* m, Player* p)
 			r->enemy = this; //set this object to that room
 			break;
 		}
-		pos = m->random_room(); //get another room
+		r = m->random_room(); //get another room
 	}
 }

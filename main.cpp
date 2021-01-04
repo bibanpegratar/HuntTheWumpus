@@ -9,7 +9,7 @@ constexpr int pit_count = 2;
 
 void game(int bat_count)
 {
-	Map m;
+	Map m(24, time(0));
 	Player p(&m, false);
 
 	std::vector <Bat*> *bats = new std::vector<Bat*>(bat_count);
@@ -55,7 +55,7 @@ void game(int bat_count)
 int main()
 try
 {
-	game(5);
+	game(10);
 	return 0;
 }
 catch (std::exception& e)
