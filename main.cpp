@@ -14,22 +14,23 @@ void game(int bat_count)
 
 	std::vector <Bat*> *bats = new std::vector<Bat*>(bat_count);
 	for (int i = 0; i < bats->size(); i++)
-		bats->at(i) = new Bat{ &m, &p };
+		bats->at(i) = &Bat{ &m, &p };
 
+	//game loop
 	while (true)
 	{
-		//game loop
-		int a;
+		
+		int nr;
 		if (p.get_pos()->enemy) p.get_pos()->enemy->action(&p, std::cout);
 
 		std::cout << "You are in " << p.get_pos()->number
-			<< ". Adjacent rooms : "
+			<< ". Passages go to rooms : "
 			<< p.get_pos()->link_1->number << " "
 			<< p.get_pos()->link_2->number << " "
 			<< p.get_pos()->link_3->number << "\n";
-		std::cout << "Bats are at :";
-		for (int i = 0; i < bats->size(); i++) std::cout << bats->at(i)->get_pos()->number << " ";
-		std::cout << "\n";
+
+		//std::cout << "Bats are at :";
+		//for (int i = 0; i < bats->size(); i++) std::cout << bats->at(i)->get_pos()->number << " ";
 
 		if (p.get_pos()->link_1->enemy)
 		{
@@ -44,9 +45,9 @@ void game(int bat_count)
 			p.get_pos()->link_3->enemy->alert(std::cout);
 		}
 
-		std::cin >> a;
-		p.move(a);
-		if (p.get_pos()->enemy) p.get_pos()->enemy->action(&p, std::cout);
+		std::cin >> nr;
+		p.move(nr);
+		while (p.get_pos()->enemy) p.get_pos()->enemy->action(&p, std::cout);
 	}
 	delete bats;
 }
@@ -54,9 +55,7 @@ void game(int bat_count)
 int main()
 try
 {
-	int a;
-	std::cin >> a;
-	game(a);
+	game(5);
 	return 0;
 }
 catch (std::exception& e)

@@ -15,10 +15,4 @@ void Player::move(int room_number)
 	else if (pos->link_2->number == n) pos = pos->link_2;
 	else if (pos->link_3->number == n) pos = pos->link_3;
 	else std::cout << "Can't go there !\n";
-	//std::cout << "Player is at room " << current_room->number;
 }
-
-//void Player::shoot(int rage, std::vector<Room> rooms)
-//{
-
-//}

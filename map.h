@@ -39,16 +39,14 @@ public:
 
 	const std::vector<int> *room_numbers() { return &room_numbers_p; }
 
-private: //commented for testing purposes
-	int room_count_p;
+private:
+	int room_count_p; //used for Map construction
 	std::vector <int> room_numbers_p; //holds all the ints for rooms available to use
-	std::vector <Room> *rooms_p;
+	std::vector <Room> *rooms_p; //holds all the Rooms in the Map
 
 	void generate_map();
-	void fill_row(int size, std::vector <Room>& rooms);
+	void fill_rooms(int size, std::vector <Room>& rooms);
 	void link_map_to_rooms(std::vector<Room>& r);
-	//Room* fill_with_enemy();
-	//void link_first_row(std::vector <int>& v, std::vector <Room>& rooms)
 };
 
 struct Room
