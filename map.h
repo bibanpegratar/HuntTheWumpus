@@ -16,12 +16,12 @@ Inside the constructor, each layer is initialized, and then generate_map() fills
 	- note that the default size of the map will be 20 ( all the points on a dodecahedron )
 	- the number of rooms can be customized, but it must still represent a version of a dodecahedron to be valid
 */
+
 struct Room;
 class Enemy;
 class Player;
 
 class Map
-
 {
 public:
 	//constructors
@@ -29,24 +29,21 @@ public:
 	Map(int seed);
 	Map(); //the default size of the map is 20 rooms (as it always should be)
 
-	const std::vector<Room> *rooms() const { return &rooms_p; }
-	Room* rooms(int index) { if (index < 0 || index > rooms_p.size()) throw std::runtime_error("invalid index"); return &rooms_p[index]; }
-	Room* rooms_by_number(int number);
+	//destructor
+	~Map() { delete rooms_p; }
 
-	const std::vector<int> &room_numbers() { return room_numbers_p; }
+	const std::vector<Room> *rooms() const { return rooms_p; }
+	Room* rooms(int index) { if (index < 0 || index > rooms_p->size()) throw std::runtime_error("invalid index"); return &rooms_p->at(index); }
+	Room* rooms_by_number(int number);
+	Room* random_room();
+
+	const std::vector<int> *room_numbers() { return &room_numbers_p; }
 
 private: //commented for testing purposes
 	int room_count_p;
 	std::vector <int> room_numbers_p; //holds all the ints for rooms available to use
-	//std::vector <int> enemy_rooms_p;  //rooms free for generation of enemies
-	std::vector <Room> rooms_p;
-	std::vector <Room> first_row_p;
-	std::vector <Room> second_row_p;
-	std::vector <Room> third_row_p;
+	std::vector <Room> *rooms_p;
 
-	void link_first_row();
-	void link_second_row();
-	void link_third_row();
 	void generate_map();
 	void fill_row(int size, std::vector <Room>& rooms);
 	void link_map_to_rooms(std::vector<Room>& r);
@@ -60,8 +57,8 @@ struct Room
 	Room *link_1 = nullptr;
 	Room *link_2 = nullptr;
 	Room *link_3 = nullptr;
-	Map *map = nullptr;
-	Enemy *enemy = nullptr;
+	Map *map = nullptr; // each room knows about the map it's on
+	Enemy *enemy = nullptr; // each room knows if it has an enemy
 };
 
 void fill_vector(std::vector <int>&);

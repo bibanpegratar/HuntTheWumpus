@@ -1,17 +1,16 @@
 #include "enemy.h"
 
-Enemy::Enemy(Map* m)
+Enemy::Enemy(Map* m, Player* p)
 {
-	Room* r = m->rooms(rand() % m->rooms()->size());
+	Room *r = m->random_room(); //get a random room from the rooms_ p vector of Map m
 	while (true)
 	{
-		if (r->enemy == nullptr)
+		if (r->enemy == nullptr && p->get_pos()->number != r->number) //if the room doesn't have an enemy
 		{
 			pos = r;
-			pos->enemy = this;
-			r->enemy = this;
+			r->enemy = this; //set this object to that room
 			break;
 		}
-		r = m->rooms(rand() % m->rooms()->size());
+		pos = m->random_room(); //get another room
 	}
 }

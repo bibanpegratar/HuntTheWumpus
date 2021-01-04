@@ -3,11 +3,11 @@
 
 class Player
 {
-	Room* pos = nullptr;
+	Room* pos;
 	bool is_alive;
 
 public:
-	void shoot(int range, std::vector<Room> rooms);
+	//void shoot(int range, std::vector<Room> rooms);
 	void move(int room_number); //move to an adjacent room
 	void die() { is_alive = false; }
 

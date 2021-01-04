@@ -1,16 +1,20 @@
 #include "bat.h"
 
-void Bat::action(Player* p)
+void Bat::action(Player* p, std::ostream& ostr)
 {
 	//NOTE: Try implementing different probabilities (depending on numbers of entrances of the player in the room etc)
 	//Randomly teleport the player to a random location
-	//Room *r = random_room(p->get_pos().map).number; 
-	//if (p->get_pos().number == random_room(p->get_pos().map).number) //there might be a chance that the same room is randomly selected
-		//this->action(p); // in that case, call this function again
-	//else p->set_pos(*random_room(*this->get_pos().map)); 
+	Room *r = this->get_pos()->map->random_room();
+	if (p->get_pos()->number == r->number) //there might be a chance that the same room is randomly selected
+		this->action(p, ostr); // in that case, call this function again
+	else
+	{
+		ostr << "Oh no! A bat has taken you to another room!\n";
+		p->set_pos(r);
+	}
 }
 
 void Bat::alert(std::ostream& ostr)
 {
-	ostr << "A bat is nearby.";
+	ostr << "A bat is nearby.\n";
 }

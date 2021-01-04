@@ -4,11 +4,12 @@
 
 class Enemy
 {
-	Room* pos = nullptr;
+	Room* pos;
 public:
-	Enemy(Map* m);
+	Enemy(Map* m, Player* p);
+	Enemy() : pos{ nullptr } {};
 	//virtual void action() = 0;
-	virtual void action(Player* p) = 0;
+	virtual void action(Player* p, std::ostream& ostr) = 0;
 	virtual void alert(std::ostream& ostr) = 0;
 	const Room* get_pos() { return pos; }
 	void set_pos(const Room &r) { *pos = r; }

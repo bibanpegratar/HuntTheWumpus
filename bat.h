@@ -9,8 +9,9 @@
 class Bat : public Enemy
 {
 public:
-	void action(Player* p);
+	void action(Player* p, std::ostream& ostr);
 	void alert(std::ostream& ostr);
-	Bat(Map* m) : Enemy{ m } {};
+	Bat(Map* m, Player* p) : Enemy{ m, p } {};
+	Bat() : Enemy() {};
 	//void move_player(Player& p);
 };
