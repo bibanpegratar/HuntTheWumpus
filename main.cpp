@@ -3,6 +3,7 @@
 #include "pit.h"
 #include "map.h"
 #include "player.h"
+#include "wumpus.h"
 
 //NOTE : Later, try randomizing the number of pits and bats
 //constexpr int bat_count = 5;
@@ -61,7 +62,7 @@ void start_message(std::ostream &ostr)
 		<< "THE NORMALLY SLEEPING WUMPUS DOES NOT MOVE(HAVING GORGED HIMSELF UPON	\n"
 		<< "A PREVIOUS HUNTER).HOWEVER SEVERAL THINGS CAN WAKE HIM UP :		        \n\n"
 
-		<< "\t1) WALKING INTO HIS ROOM		17										\n"
+		<< "\t1) WALKING INTO HIS ROOM												"
 		<< "\t2) SHOOTING AN ARROW ANYWHERE IN THE NETWORK							\n"
 		<< "\t3) TRIPPING OVER DEBRIS(CLUMSINESS).									\n\n"
 
@@ -70,7 +71,7 @@ void start_message(std::ostream &ostr)
 		<< "BIG TO BE PICKED UP BY SUPER - BATS AND HAS SUCKER FEET, SO HE DOESN'T	\n"
 		<< "FALL INTO THE PITS.												      	\n\n"
 
-		<< "YOU CAN SMELL THE WUMPUS FROM ONE OR TWO ROOMS AWAY.YOU WILL		   	\n"
+		<< "YOU CAN SMELL THE WUMPUS FROM ONE ROOM AWAY.YOU WILL		        	\n"
 		<< "TREMBLE WITH FEAR WHEN HE MOVES ABOUT.YOU CAN HEAR SUPER - BATS FROM  	\n"
 		<< "ONE ROOM AWAY, AND FEEL DRAFTS(FROM BOTTOMLESS PITS) FROM ONE ROOM	   	\n"
 		<< "AWAY(AND TASTE THE FEAR...).										   	\n\n"
@@ -93,9 +94,10 @@ void start_message(std::ostream &ostr)
 
 void game(int bat_count, int pit_count)
 {
-	Map m;
+	Map m(0);
 	Player p(&m, false);
 
+	//allocate memory on the free store for enemies
 	std::vector <Bat*> bats(bat_count);
 	for (int i = 0; i < bats.size(); i++)
 		bats[i] = new Bat{ &m, &p };
@@ -103,6 +105,8 @@ void game(int bat_count, int pit_count)
 	std::vector <Pit*> pits(pit_count);
 	for (int i = 0; i < pits.size(); i++)
 		pits[i] = new Pit{ &m, &p };
+
+	Wumpus *wumpus = new Wumpus{ &m, &p };
 
 	//game loop
     while (true)
@@ -123,6 +127,8 @@ void game(int bat_count, int pit_count)
 		//for (int i = 0; i < pits.size(); i++) std::cout << pits[i]->get_pos()->number << " ";
 		//std::cout << "\n";
 
+		//std::cout << "The Wumpus is on " << wumpus->get_pos()->number << ".\n";
+
         if (p.get_pos()->link_1->enemy)
 			p.get_pos()->link_1->enemy->alert(std::cout);
 
@@ -139,16 +145,19 @@ void game(int bat_count, int pit_count)
         if (p.get_pos()->enemy) p.get_pos()->enemy->action(&p, std::cout);
 		if (!p.is_alive())
 		{
-			std::cout << "YOU DIED !(in red text) ;)\n";
+			std::cout << "YOU DIED !\n";
 			break;
 		}
     }
 
+	//dealocate memory on the free store
     for(int i = 0; i < bats.size(); i++)
         delete bats[i];
 
 	for (int i = 0; i < pits.size(); i++)
 		delete pits[i];
+
+	delete wumpus;
 }
 
 //For testing map generation with different sizes

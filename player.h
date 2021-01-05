@@ -3,6 +3,7 @@
 
 class Player
 {
+private:
 	Room* pos;
 	bool is_alive_p;
 
