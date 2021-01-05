@@ -30,7 +30,7 @@ public:
 	Map(); //the default size of the map is 20 rooms (as it always should be)
 
 	//destructor
-	~Map() { delete rooms_p; }
+    ~Map() { delete rooms_p; }
 
 	const std::vector<Room> *rooms() const { return rooms_p; }
 	Room* rooms(int index) { if (index < 0 || index > rooms_p->size()) throw std::runtime_error("invalid index"); return &rooms_p->at(index); }
@@ -52,11 +52,12 @@ private:
 struct Room
 {
 	int number; // the number of the current room
-	Room *link_1 = nullptr;
-	Room *link_2 = nullptr;
-	Room *link_3 = nullptr;
+    Room *link_1 = nullptr;
+    Room *link_2 = nullptr;
+    Room *link_3 = nullptr;
 	Map *map = nullptr; // each room knows about the map it's on
 	Enemy *enemy = nullptr; // each room knows if it has an enemy
+    //~Room(){delete link_1; delete link_2; delete link_3; delete enemy;}
 };
 
 void fill_vector(std::vector <int>&);

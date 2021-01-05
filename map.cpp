@@ -48,8 +48,7 @@ void Map::generate_map()
 	index++;
 
 
-	//Linking rooms of first row (link_1 and link_2)
-	//for the first room of the second row
+    //Linking rooms of second row (link_1 and link_2)
 	rooms_p->at(index).link_1 = &rooms_p->at(index + second_r_size - 1); //link_1 = the last room on the second row
 	rooms_p->at(index).link_2 = &rooms_p->at(index + 1); //link_2 = next room
 	index++;
@@ -63,10 +62,10 @@ void Map::generate_map()
 	}
 
 	rooms_p->at(index).link_1 = &rooms_p->at(index - 1);
-	rooms_p->at(index).link_2 = &rooms_p->at(index - (second_r_size + 1)); 
+    rooms_p->at(index).link_2 = &rooms_p->at(first_r_size);
 	index++;
 
-	//Linking rooms of first row (link_1 and link_2)
+    //Linking rooms of third row (link_1 and link_2)
 	rooms_p->at(index).link_1 = &rooms_p->at(index + third_r_size - 1);
 	rooms_p->at(index).link_2 = &rooms_p->at(index + 1);
 	index++;
@@ -79,7 +78,7 @@ void Map::generate_map()
 	}
 
 	rooms_p->at(index).link_1 = &rooms_p->at(index - 1);
-	rooms_p->at(index).link_2 = &rooms_p->at(index - (third_r_size + 1));
+    rooms_p->at(index).link_2 = &rooms_p->at(first_r_size+second_r_size);
 	index++;
 
 	index = 0; // reset the index, start iterating from the start of the vector to add link_3
@@ -95,7 +94,7 @@ void Map::generate_map()
 	//Linking link_3 between remaining rooms on second row and third row
 	for (int i = 0; i < second_r_size; i++)
 	{
-		if (index % 2 == 0) //the rooms with no link_3 have even indexes
+        if (rooms_p->at(index).link_3 == nullptr)
 		{
 			rooms_p->at(index).link_3 = &rooms_p->at(room_count_p - third_r_size + i / 2);
 			rooms_p->at(room_count_p - third_r_size + i / 2).link_3 = &rooms_p->at(index);
