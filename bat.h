@@ -1,7 +1,5 @@
 #pragma once
 #include "enemy.h"
-#include "map.h"
-
 
 class Bat : public Enemy
 {

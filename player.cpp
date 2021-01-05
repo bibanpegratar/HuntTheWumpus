@@ -1,7 +1,7 @@
 #include "player.h"
 
 Player::Player(Map* m, bool rand_pos)
-	:is_alive{ true }
+	:is_alive_p{ true }
 {
 	if (rand_pos) pos = m->random_room(); //spawn the player at a random position
 	else pos = m->rooms(0); //spawn the player at the first room in the vector

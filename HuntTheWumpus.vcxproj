@@ -25,10 +25,12 @@
     <ClCompile Include="map.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="player.h" />
+    <ClCompile Include="pit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bat.h" />
     <ClInclude Include="enemy.h" />
+    <ClInclude Include="pit.h" />
     <ClInclude Include="map.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
