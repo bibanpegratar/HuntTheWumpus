@@ -39,6 +39,9 @@
     <ClCompile Include="wumpus.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="arrow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="map.h">
@@ -54,6 +57,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="wumpus.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="arrow.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

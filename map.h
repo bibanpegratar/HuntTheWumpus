@@ -20,6 +20,7 @@ Inside the constructor, each layer is initialized, and then generate_map() fills
 struct Room;
 class Enemy;
 class Player;
+struct Arrow;
 
 class Map
 {
@@ -57,6 +58,7 @@ struct Room
     Room *link_3 = nullptr;
 	Map *map = nullptr; // each room knows about the map it's on
 	Enemy *enemy = nullptr; // each room knows if it has an enemy
+	Arrow *arrow = nullptr; 
     //~Room(){delete link_1; delete link_2; delete link_3; delete enemy;}
 };
 

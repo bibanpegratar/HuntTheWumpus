@@ -95,7 +95,7 @@ void start_message(std::ostream &ostr)
 void game(int bat_count, int pit_count)
 {
 	Map m(0);
-	Player p(&m, false);
+	Player p(&m, false, 5);
 
 	//allocate memory on the free store for enemies
 	std::vector <Bat*> bats(bat_count);
@@ -119,15 +119,15 @@ void game(int bat_count, int pit_count)
 			<< p.get_pos()->link_2->number << " "
 			<< p.get_pos()->link_3->number << "\n";
 
-        //std::cout << "Bats are at :";
-        //for (int i = 0; i < bats.size(); i++) std::cout << bats[i]->get_pos()->number << " ";
-        //std::cout << "\n";
+        std::cout << "Bats are at :";
+        for (int i = 0; i < bats.size(); i++) std::cout << bats[i]->get_pos()->number << " ";
+        std::cout << "\n";
 
-		//std::cout << "Pits are at :";
-		//for (int i = 0; i < pits.size(); i++) std::cout << pits[i]->get_pos()->number << " ";
-		//std::cout << "\n";
+		std::cout << "Pits are at :";
+		for (int i = 0; i < pits.size(); i++) std::cout << pits[i]->get_pos()->number << " ";
+		std::cout << "\n";
 
-		//std::cout << "The Wumpus is on " << wumpus->get_pos()->number << ".\n";
+		std::cout << "The Wumpus is on " << wumpus->get_pos()->number << ".\n";
 
         if (p.get_pos()->link_1->enemy)
 			p.get_pos()->link_1->enemy->alert(std::cout);
@@ -138,14 +138,42 @@ void game(int bat_count, int pit_count)
 		if (p.get_pos()->link_3->enemy)
 			p.get_pos()->link_3->enemy->alert(std::cout);
 
-        std::cin >> nr;
-        std::cout << "\n";
-        p.move(nr);
+		char ch;
+		std::cin >> ch;
 
+		switch (ch)
+		{
+			case 'M':
+			{
+				int nr;
+				std::cin >> nr;\
+				std::cout << "\n";
+				p.move(nr);
+			}
+			
+			case 'S':
+			{
+				int range;
+				std::cout << "How many rooms do you want to shoot the arrow through ? (max " << p.get_arrows()->at(0).max_range_p << " rooms)\n";
+				std::cin >> range;
+				p.shoot(range, std::cin, wumpus);
+			}
+
+		}
+
+		if (p.get_arrows()->size() == 0) p.die(); //if the player runs out of arrows, die
         if (p.get_pos()->enemy) p.get_pos()->enemy->action(&p, std::cout);
+		
+
 		if (!p.is_alive())
 		{
 			std::cout << "YOU DIED !\n";
+			break;
+		}
+
+		if (!wumpus->is_alive())
+		{
+			std::cout << "YOU WON !\n";
 			break;
 		}
     }
