@@ -17,9 +17,10 @@ Inside the constructor, each layer is initialized, and then generate_map() fills
 	- the number of rooms can be customized, but it must still represent a version of a dodecahedron to be valid
 */
 
+class Player;
 struct Room;
 class Enemy;
-class Player;
+class Wumpus;
 struct Arrow;
 
 class Map

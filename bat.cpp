@@ -39,6 +39,7 @@ void Bat::action(Player* p, std::ostream& ostr)
         {
             ostr << "Oh no! A bat has taken you to another room!\n";
             p->set_pos(r);
+            p->update_arrow_position();
             this->move();
         }
         else //increase the action chance for the Bat

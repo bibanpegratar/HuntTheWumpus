@@ -1,5 +1,8 @@
 #pragma once
+#include "map.h"
+#include "player.h"
 #include "enemy.h"
+#include "arrow.h"
 
 class Pit : public Enemy
 {

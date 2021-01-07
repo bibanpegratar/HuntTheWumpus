@@ -1,8 +1,9 @@
+#include "map.h"
+#include "arrow.h"
+#include "player.h"
 #include "enemy.h"
 #include "bat.h"
 #include "pit.h"
-#include "map.h"
-#include "player.h"
 #include "wumpus.h"
 
 //NOTE : Later, try randomizing the number of pits and bats
@@ -62,7 +63,7 @@ void start_message(std::ostream &ostr)
 		<< "THE NORMALLY SLEEPING WUMPUS DOES NOT MOVE(HAVING GORGED HIMSELF UPON	\n"
 		<< "A PREVIOUS HUNTER).HOWEVER SEVERAL THINGS CAN WAKE HIM UP :		        \n\n"
 
-		<< "\t1) WALKING INTO HIS ROOM												"
+        << "\t1) WALKING INTO HIS ROOM                                              \n"
 		<< "\t2) SHOOTING AN ARROW ANYWHERE IN THE NETWORK							\n"
 		<< "\t3) TRIPPING OVER DEBRIS(CLUMSINESS).									\n\n"
 
@@ -76,13 +77,10 @@ void start_message(std::ostream &ostr)
 		<< "ONE ROOM AWAY, AND FEEL DRAFTS(FROM BOTTOMLESS PITS) FROM ONE ROOM	   	\n"
 		<< "AWAY(AND TASTE THE FEAR...).										   	\n\n"
 
-		<< "TO SHOOT AN ARROW TYPE 'SHOOT' INSTEAD OF A MOVE, AND THEN			   	\n"
-		<< "SPECIFY WHICH ROOMS THE ARROW SHOULD PASS THROUGH.YOU ARE STRONG	   	\n"
-		<< "ENOUGH TO SHOOT IT THROUGH AS MANY AS FIVE ROOMS.BENT ARROWS HAVE	   	\n"
-		<< "NO PROBLEM ROUNDING CORNERS OF LESS THAN 98.6 DEGREES.IF YOU		   	\n"
-		<< "SPECIFY AN IMPOSSIBLE PATH THE ARROW WILL RICOCHET OFF THE WALLS OF   	\n"
-		<< "THE ROOM, LOSING SPEED, AND WILL EVENTUALLY COME TO REST IN ONE OF	   	\n"
-		<< "THE ADJOINING ROOMS.THE PATH MAY BE TERMINATED BY SPECIFYING ROOM 0.  	\n\n"
+        << "TO MOVE TYPE 'M' FOLLOWED BY AN ADJACENT ROOM.                          \n"
+        << "TO SHOOT TYPE 'S' <NUMBER_OF_ADJACENT_ROOMS> ADJACENT_ROOMS             \n"
+        << "\t -NUMBER_OF_ADJACENT_ROOMS = the number of rooms the arrow will go through(max 3);\n"
+        << "\t -ADJACENT_ROOMS = the list of adjacent rooms you want the arrows to go through (space separated);\n\n"
 
 		<< "EACH ROOM IS CONNECTED TO THREE OTHER ROOMS BY THREE TUNNELS.		   	\n"
 		<< "YOU MUST ALWAYS MOVE BETWEEN ROOMS BY SPECIFYING WHICH				   	\n"
@@ -94,8 +92,8 @@ void start_message(std::ostream &ostr)
 
 void game(int bat_count, int pit_count)
 {
-	Map m(0);
-	Player p(&m, false, 5);
+	Map m;
+    Player p(&m, false, 5); //a player with 5 arrows
 
 	//allocate memory on the free store for enemies
 	std::vector <Bat*> bats(bat_count);
@@ -111,23 +109,21 @@ void game(int bat_count, int pit_count)
 	//game loop
     while (true)
     {
-		
-		int nr;
 		std::cout << "You are in " << p.get_pos()->number
 			<< ". Passages go to rooms : "
 			<< p.get_pos()->link_1->number << " "
 			<< p.get_pos()->link_2->number << " "
 			<< p.get_pos()->link_3->number << "\n";
 
-        std::cout << "Bats are at :";
-        for (int i = 0; i < bats.size(); i++) std::cout << bats[i]->get_pos()->number << " ";
-        std::cout << "\n";
+        //std::cout << "Bats are at :";
+        //for (int i = 0; i < bats.size(); i++) std::cout << bats[i]->get_pos()->number << " ";
+        //std::cout << "\n";
 
-		std::cout << "Pits are at :";
-		for (int i = 0; i < pits.size(); i++) std::cout << pits[i]->get_pos()->number << " ";
-		std::cout << "\n";
+        //std::cout << "Pits are at :";
+        //for (int i = 0; i < pits.size(); i++) std::cout << pits[i]->get_pos()->number << " ";
+        //std::cout << "\n";
 
-		std::cout << "The Wumpus is on " << wumpus->get_pos()->number << ".\n";
+        //std::cout << "The Wumpus is on " << wumpus->get_pos()->number << ".\n";
 
         if (p.get_pos()->link_1->enemy)
 			p.get_pos()->link_1->enemy->alert(std::cout);
@@ -146,44 +142,83 @@ void game(int bat_count, int pit_count)
 			case 'M':
 			{
 				int nr;
-				std::cin >> nr;\
+                std::cin >> nr;
+                if(std::cin.fail())
+                {
+					std::cin.ignore(100000000, '\n');
+                    std::cerr << "Error reading number\n";
+                    std::cin.clear();
+                    break;
+                }
 				std::cout << "\n";
 				p.move(nr);
+                break;
 			}
 			
 			case 'S':
 			{
 				int range;
-				std::cout << "How many rooms do you want to shoot the arrow through ? (max " << p.get_arrows()->at(0).max_range_p << " rooms)\n";
+                //std::cout << "How many rooms do you want to shoot the arrow through ? (max " << p.get_arrows()->at(0).max_range_p << " rooms)\n";
 				std::cin >> range;
-				p.shoot(range, std::cin, wumpus);
+                if(std::cin.fail())
+                {
+                    std::cerr << "Error reading number\n";
+					std::cin.ignore(100000000, '\n');
+                    std::cin.clear();
+                    break;
+                }
+                if(range == 0)
+                {
+                    std::cout << "Range cannot be 0!\n";
+                    break;
+                }
+                bool success_shot = p.shoot(range, std::cin, wumpus);
+
+                if(wumpus->is_alive() || success_shot) //if the wumpus is still alive after shooting, it means it hasn't been hit by an arrow, so move
+                {
+                    std::cout << "You missed! ";
+                    wumpus->move();
+                    break;
+                }
+                else if (!wumpus->is_alive())
+                {
+                    std::cout << "YOU WON !\n";
+                    break;
+                }
+                break;
 			}
-
+            default:
+                std::cout << "Invalid choice. Try again\n\n";
+                std::cin.ignore(100000000,'\n'); // clear input buffer for a huge number of chars or until newline
+                break;
 		}
 
-		if (p.get_arrows()->size() == 0) p.die(); //if the player runs out of arrows, die
         if (p.get_pos()->enemy) p.get_pos()->enemy->action(&p, std::cout);
-		
 
-		if (!p.is_alive())
-		{
-			std::cout << "YOU DIED !\n";
-			break;
-		}
+        if (p.get_arrows().size() == 0)
+        {
+            std::cout << "You ran out of arrows!\n";
+            p.die(); //if the player runs out of arrows, die
+        }
 
-		if (!wumpus->is_alive())
-		{
-			std::cout << "YOU WON !\n";
-			break;
-		}
+
+        if (!p.is_alive())
+        {
+            std::cout << "YOU DIED !\n";
+            break;
+        }
     }
 
 	//dealocate memory on the free store
     for(int i = 0; i < bats.size(); i++)
+    {
         delete bats[i];
+    }
 
 	for (int i = 0; i < pits.size(); i++)
+    {
 		delete pits[i];
+    }
 
 	delete wumpus;
 }

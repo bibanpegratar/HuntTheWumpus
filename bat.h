@@ -1,6 +1,7 @@
 #pragma once
-#include "enemy.h"
 
+#include "pit.h"
+#include "arrow.h"
 class Bat : public Enemy
 {
     int action_chance_p;

@@ -4,7 +4,8 @@ void Wumpus::move()
 {
 	int i = 0;
 	srand(time(0));
-	i = rand() % 3;
+    i = rand() % 3 + 1;
+    std::cout << "\t The Wumpus moved!\n";
 	switch (i)
 	{
 	case 1:
