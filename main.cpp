@@ -46,12 +46,12 @@ void start_message(std::ostream &ostr)
 		<< "								by Biban        					    \n\n"
 
 		<< "YOU ARE A FAMOUS HUNTER DESCENDING DOWN INTO THE CAVES OF DARKNESS,     \n"
-		<< "LAIR OF THE INFAMOUS MAN - EATING WUMPUS.YOU ARE EQUIPPED WITH --- 	    \n"
-		<< "BENT ARROWS, AND ALL YOUR SENSES.THERE ARE-- - CAVES CONNECTED			\n"
+		<< "LAIR OF THE INFAMOUS MAN - EATING WUMPUS.YOU ARE EQUIPPED WITH 5 	    \n"
+		<< "BENT ARROWS, AND ALL YOUR SENSES.THERE ARE 20 CAVES CONNECTED			\n"
 		<< "BY TUNNELS, AND THERE ARE TWO OTHER KINDS OF HAZARDS :					\n\n"
 
 		<< "A) PITS, WHICH ARE BOTTOMLESS, AND USUALLY FATAL TO FALL				\n"
-		<< "INTO .THERE ARE --- SUCH PITS IN THE NETWORK. 							\n\n"
+        << "INTO .THERE ARE 2 SUCH PITS IN THE NETWORK. 							\n\n"
 
 		<< "B) SUPER - BATS, WHICH IF YOU STUMBLE INTO THEIR ROOM WILL				\n"
 		<< "PICK YOU UP AND DROP YOU IN SOME RANDOM ROOM IN THE NETWORK.			\n"
@@ -92,7 +92,7 @@ void start_message(std::ostream &ostr)
 
 void game(int bat_count, int pit_count)
 {
-	Map m;
+	Map m(0);
     Player p(&m, false, 5); //a player with 5 arrows
 
 	//allocate memory on the free store for enemies
@@ -151,7 +151,7 @@ void game(int bat_count, int pit_count)
                     break;
                 }
 				std::cout << "\n";
-				p.move(nr);
+                p.move(nr, std::cout);
                 break;
 			}
 			
@@ -172,9 +172,9 @@ void game(int bat_count, int pit_count)
                     std::cout << "Range cannot be 0!\n";
                     break;
                 }
-                bool success_shot = p.shoot(range, std::cin, wumpus);
+                bool success_shot = p.shoot(range, std::cin, std::cout, wumpus);
 
-                if(wumpus->is_alive() || success_shot) //if the wumpus is still alive after shooting, it means it hasn't been hit by an arrow, so move
+                if(wumpus->is_alive() && success_shot) //if the wumpus is still alive after shooting, it means it hasn't been hit by an arrow, so move
                 {
                     std::cout << "You missed! ";
                     wumpus->move();
@@ -182,7 +182,6 @@ void game(int bat_count, int pit_count)
                 }
                 else if (!wumpus->is_alive())
                 {
-                    std::cout << "YOU WON !\n";
                     break;
                 }
                 break;
@@ -197,7 +196,6 @@ void game(int bat_count, int pit_count)
 
         if (p.get_arrows().size() == 0)
         {
-            std::cout << "You ran out of arrows!\n";
             p.die(); //if the player runs out of arrows, die
         }
 
@@ -205,6 +203,12 @@ void game(int bat_count, int pit_count)
         if (!p.is_alive())
         {
             std::cout << "YOU DIED !\n";
+            break;
+        }
+
+        if (!wumpus->is_alive())
+        {
+            std::cout << "YOU WON !\n";
             break;
         }
     }
@@ -237,7 +241,7 @@ int main()
 try
 {
 	start_message(std::cout);
-    game(2,2);
+    game(3,2);
 	keep_window_open('X');
 	return 0;
 }

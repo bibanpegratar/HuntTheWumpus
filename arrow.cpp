@@ -15,7 +15,7 @@ Arrow::Arrow(Player* p)
 	pos->arrow = this;
 }
 
-bool Arrow::shoot(int range, std::istream& istr, Wumpus* wumpus)
+bool Arrow::shoot(int range, std::istream& istr, std::ostream& ostr, Wumpus* wumpus)
 {
 	if (range > max_range_p)
 	{
@@ -34,7 +34,7 @@ bool Arrow::shoot(int range, std::istream& istr, Wumpus* wumpus)
 		pos->arrow = this;
         if (wumpus->get_pos() == pos)
             wumpus->die();
-		shoot(range - 1, istr, wumpus);
+        shoot(range - 1, istr, ostr, wumpus);
 	}
 
 	else if (a == pos->link_2->number)
@@ -44,7 +44,7 @@ bool Arrow::shoot(int range, std::istream& istr, Wumpus* wumpus)
 		pos->arrow = this;
         if (wumpus->get_pos() == pos)
             wumpus->die();
-		shoot(range - 1, istr, wumpus);
+        shoot(range - 1, istr, ostr, wumpus);
 	}
 
 	else if (a == pos->link_3->number)
@@ -54,12 +54,12 @@ bool Arrow::shoot(int range, std::istream& istr, Wumpus* wumpus)
 		pos->arrow = this;
         if (wumpus->get_pos() == pos)
             wumpus->die();
-		shoot(range - 1, istr, wumpus);
+        shoot(range - 1, istr, ostr, wumpus);
 	}
 
 	else
 	{
-		std::cout << "Invalid room!\n";
+        ostr << "Invalid room!\n";
         return false;
 	}
 }
