@@ -25,7 +25,6 @@
     <ClCompile Include="map.cpp" />
     <ClCompile Include="player.cpp" />
     <ClCompile Include="player.h" />
-    <ClCompile Include="pit.cpp" />
     <ClCompile Include="arrow.cpp" />
     <ClCompile Include="wumpus.cpp" />
   </ItemGroup>

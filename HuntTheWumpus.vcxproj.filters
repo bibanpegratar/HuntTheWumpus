@@ -33,9 +33,6 @@
     <ClCompile Include="enemy.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="pit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="wumpus.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
